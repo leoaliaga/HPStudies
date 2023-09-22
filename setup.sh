@@ -9,8 +9,8 @@ setup python v2_7_14
 setup dk2nu v01_05_01b -q e15:prof
 unset G4BIN
 
-SETUPDIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
-export G4WORKDIR=`dirname ${SETUPDIR}`
+SETUPDIR=${PWD}
+export G4WORKDIR=${SETUPDIR}
 export LD_LIBRARY_PATH=${G4WORKDIR}/build:${G4WORKDIR}/ana:${LD_LIBRARY_PATH}
 
 #cmake .
