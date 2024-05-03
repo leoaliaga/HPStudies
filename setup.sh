@@ -13,6 +13,15 @@ SETUPDIR=${PWD}
 export G4WORKDIR=${SETUPDIR}
 export LD_LIBRARY_PATH=${G4WORKDIR}/build:${G4WORKDIR}/ana:${LD_LIBRARY_PATH}
 
+#change this to your experiment
+export EXPERIMENT=sbnd
+
+setup cigetcert                                    
+kx509
+setup fife_utils
+#voms-proxy-init -noregen -rfc -voms 'fermilab:/fermilab/sbnd/Role=Analysis'
+setup jobsub_client
+
 #cmake .
 #make all
 

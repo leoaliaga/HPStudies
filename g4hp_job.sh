@@ -20,7 +20,7 @@ ls
 echo
 echo "======== SETUP ROOT, BOOST and DK2NU ========"
 echo "source setup_g4hp_cvmfs.sh"
-source setup_g4hp_cvmfs.sh
+source setup.sh
 
 echo "PHYSICS=${PHYSICS}"
 echo "PARTICLE=${PARTICLE}"

@@ -56,7 +56,7 @@ def main():
   print "\nOutput logfile(s):",logfile
 
   submit_command = ("jobsub_submit {GRID} {MEMORY} -N {NJOBS} -d G4HP {OUTDIR} "
-      "-G dune --expected-lifetime=long "
+      "-G {EXPERIMENT} --expected-lifetime=long "
       "-e PHYSICS={PHYSICS} " 
       "-e PARTICLE={PARTICLE} " 
       "-e ENERGY={ENERGY} " 
@@ -67,12 +67,13 @@ def main():
       "-f {TARFILE} "
       "-L {LOGFILE} "
       "file://{CACHE}/g4hp_job.sh".format(
-      GRID       = ("--OS=SL7 -g "
+      GRID       = ("--singularity-image=/cvmfs/singularity.opensciencegrid.org/fermilab/fnal-wn-sl7:latest "
                     "--resource-provides=usage_model=DEDICATED,OPPORTUNISTIC "
                     "--role=Analysis "),
       MEMORY     = "--memory 1200MB ",
       NJOBS      = options.njobs,
       OUTDIR     = options.outdir,
+      EXPERIMENT = os.getenv("EXPERIMENT"),
       PARTICLE   = options.particle,    
       ENERGY     = options.energy,    
       PHYSICS    = options.physics,    
