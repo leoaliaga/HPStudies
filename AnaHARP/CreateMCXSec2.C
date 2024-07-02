@@ -41,7 +41,7 @@ std::vector<TH1D*> getanghist(TH2D* hh2In,std::string name);
 //Compiling: g++ -o CreateMCXSec2 CreateMCXSec2.C `root-config --cflags --glibs`
 //Running: ./CreateMCXSec2 [file with the list of input files] [output root file]
 
-void CreateMCXSec2(const char* infiles, const char* out_histfile){
+void CreateMCXSec2(const char* infile, const char* out_histfile){
 
   TFile* foutput = new TFile(out_histfile,"RECREATE");
 
@@ -52,25 +52,11 @@ void CreateMCXSec2(const char* infiles, const char* out_histfile){
     h2xsec[i] = new TH2D(Form("h2xsec_%s",part[i]),"",Nmom-1,mom,Nang-1,ang);
   }
   
-  TChain* evts  = new TChain("hAinfoTree");
   TChain* setup = new TChain("setup");
-
-  std::ifstream ifs;	
-  ifs.open(infiles);
-  std::string line;
-  int counter = 0;
-  while (ifs.good()) {
-    getline(ifs,line);
-    if(line.find(".root")>10000)continue;
-
-    evts->Add(line.c_str());
-    std::cout<<"Adding ntuple at : "<<line<<std::endl;
-
-    if(counter==0)setup->Add(line.c_str());
-    counter++;
-  }	
-  ifs.close();  
-
+  TChain* evts  = new TChain("hAinfoTree");
+  setup->Add(infile);
+  evts->Add(infile);
+  
   int Npart;
   int pdg[kMaxprodpart];   
   double mom[kMaxprodpart][4];
@@ -86,15 +72,11 @@ void CreateMCXSec2(const char* infiles, const char* out_histfile){
   setup->SetBranchAddress("nof_events",&POT); // POT
   setup->GetEntry(0);
 
-  POT *= counter; //adding all POT per file
-  
   double sigma_factor = A/(dens * NAval * dx * POT); // mb
   
-  std::cout<<"=> sigma_factor "<< sigma_factor <<std::endl;
+  std::cout<<"=> sigma_factor "<< sigma_factor <<" "<<dens<<" "<<NAval<<" "<<dx<<" "<<POT<<std::endl;
   
-  std::cout<< (evts->GetNtrees()) <<" files were added to the chain"<<std::endl;
-  
-  //Loop and filling:
+   //Loop and filling: 
   int nentries  = (int)evts->GetEntries();
   std::cout<<"Entries "<<nentries<<std::endl;;
 
