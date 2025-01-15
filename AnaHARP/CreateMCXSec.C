@@ -98,9 +98,10 @@ void CreateMCXSec(const char* infiles, const char* out_histfile){
   setup->SetBranchAddress("A",&A); // g/mol
   setup->SetBranchAddress("nof_events",&POT); // POT
   setup->GetEntry(0);
-  POT *= counter; //adding all POT per file
+  double dPOT = double(POT);
+  dPOT *= double(counter); //adding all POT per file
   
-  double sigma_factor = A/(dens * NAval * dx * POT); // mb
+  double sigma_factor = A/(dens * NAval * dx * dPOT); // mb
   
   std::cout<<"=> sigma_factor "<< sigma_factor <<std::endl;
   
@@ -120,7 +121,6 @@ void CreateMCXSec(const char* infiles, const char* out_histfile){
     for(int ipart=0;ipart<npart;ipart++){
       int idx = getpartidx(hAinfo->prodpart[ipart].pdg);      
       if(idx<0)continue;
-      //std::cout<<idx<<" "<< (hAinfo->prodpart[ipart].pdg) <<std::endl;
       double px = hAinfo->prodpart[ipart].mom[0] / 1000.; //MeV/c -> GeV/c
       double py = hAinfo->prodpart[ipart].mom[1] / 1000.;
       double pz = hAinfo->prodpart[ipart].mom[2] / 1000.;
@@ -137,7 +137,7 @@ void CreateMCXSec(const char* infiles, const char* out_histfile){
   //Multiplicity:
   for(int i=0;i<Npar;i++){
     for(int j=0;j<Ntyp;j++){
-      hmult[i][j]->Scale(1./double(POT));
+      hmult[i][j]->Scale(1./dPOT);
     }
   }
   
